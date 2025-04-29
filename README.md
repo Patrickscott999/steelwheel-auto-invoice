@@ -1,36 +1,133 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SteelWheel Auto Invoice Generator
+
+A modern, responsive web application for car dealership invoice management with a galaxy-themed UI and Supabase integration.
+
+![SteelWheel Auto Invoice Generator](https://i.imgur.com/placeholder.png)
+
+## Features
+
+- **🔐 Secure Authentication**
+  - Restricted access for CEO only (email: ceo@dealership.com)
+  - Auto-logout for unauthorized users
+  - Secure session management with Supabase Auth
+
+- **🌌 Galaxy-Themed UI**
+  - Dark space background with animated stars
+  - Electric blue and neon green accent colors
+  - Custom font pairing (Orbitron for headers, Poppins for body text)
+  - Smooth animations and transitions
+  - Fully responsive design for all devices
+
+- **🧾 Comprehensive Invoice Management**
+  - Create detailed invoices with customer information
+  - Add multiple vehicles to a single invoice
+  - Automatic calculation of subtotal, GCT (15%), and grand total
+  - Dynamic invoice number generation based on date
+  - PDF generation and download
+  - Email invoice capability
+
+- **📁 Data Management with Supabase**
+  - Customer data storage and retrieval
+  - Invoice history with search functionality
+  - View, reprint, and resend past invoices
+
+## Technologies Used
+
+- **Frontend**: Next.js, TypeScript, Tailwind CSS, Framer Motion
+- **Backend**: Supabase (Auth, Database)
+- **PDF Generation**: React-PDF
+- **Forms**: React Hook Form
+- **Notifications**: React-Toastify
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
+- Node.js 16.x or later
+- npm or yarn
+- Supabase account (for database and authentication)
+
+### Installation
+
+1. Clone the repository
+```bash
+git clone https://github.com/yourusername/steelwheel-invoice-generator.git
+cd steelwheel-invoice-generator
+```
+
+2. Install dependencies
+```bash
+npm install
+# or
+yarn install
+```
+
+3. Create a `.env.local` file in the root directory with your Supabase credentials:
+```
+NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
+```
+
+4. Run the development server
 ```bash
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+5. Open [http://localhost:3000](http://localhost:3000) with your browser
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Supabase Setup
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Create a new Supabase project
+2. Set up the following tables in Supabase:
 
-## Learn More
+#### Customers Table
+```sql
+create table customers (
+  id uuid default uuid_generate_v4() primary key,
+  full_name text not null,
+  trn text not null,
+  address text not null,
+  phone text not null,
+  email text not null unique,
+  created_at timestamp with time zone default now()
+);
+```
 
-To learn more about Next.js, take a look at the following resources:
+#### Invoices Table
+```sql
+create table invoices (
+  id uuid default uuid_generate_v4() primary key,
+  invoice_number text not null unique,
+  customer_id uuid references customers(id),
+  vehicles jsonb not null,
+  subtotal numeric not null,
+  gct numeric not null,
+  total numeric not null,
+  status text not null,
+  created_at timestamp with time zone default now()
+);
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+3. Create the CEO user through Supabase Authentication (email: ceo@dealership.com)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Usage
 
-## Deploy on Vercel
+1. Login with CEO credentials
+2. You'll be redirected to the Invoice Creation page
+3. Fill in customer details and add vehicle information
+4. Save the invoice to generate a PDF
+5. Download or email the invoice to the customer
+6. View past invoices in the Past Invoices section
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## License
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Acknowledgments
+
+- [Next.js](https://nextjs.org) - The React Framework
+- [Supabase](https://supabase.io) - Open Source Firebase Alternative
+- [Tailwind CSS](https://tailwindcss.com) - Utility-first CSS framework
+- [Framer Motion](https://www.framer.com/motion/) - Animation library for React

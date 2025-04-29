@@ -1,26 +1,91 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --navy-900: #0A1128;
+  --navy-800: #112240;
+  --navy-700: #1A365D;
+  --electric-blue: #3AB0FF;
+  --neon-green: #00FFAB;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer components {
+  .font-orbitron {
+    font-family: 'Orbitron', sans-serif;
+  }
+  
+  .font-poppins {
+    font-family: 'Poppins', sans-serif;
+  }
+  
+  .bg-navy-900 {
+    background-color: var(--navy-900);
+  }
+  
+  .bg-navy-800 {
+    background-color: var(--navy-800);
+  }
+  
+  .bg-navy-700 {
+    background-color: var(--navy-700);
+  }
+  
+  .text-electric-blue {
+    color: var(--electric-blue);
+  }
+  
+  .text-neon-green {
+    color: var(--neon-green);
+  }
+  
+  .border-electric-blue {
+    border-color: var(--electric-blue);
+  }
+  
+  .galaxy-bg {
+    background: linear-gradient(to bottom, var(--navy-900), #000000);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .galaxy-bg::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-image: radial-gradient(white, rgba(255, 255, 255, 0.2) 2px, transparent 2px);
+    background-size: 100px 100px;
+    background-position: 0 0, 50px 50px;
+    animation: twinkling 10s linear infinite;
+    z-index: 0;
+  }
+  
+  @keyframes twinkling {
+    0% {
+      opacity: 0.5;
+    }
+    50% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0.5;
+    }
+  }
+  
+  .glass-card {
+    background: rgba(10, 17, 40, 0.6);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(58, 176, 255, 0.3);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
   }
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--navy-900);
+  color: white;
+  font-family: 'Poppins', sans-serif;
+  overflow-x: hidden;
 }

@@ -1,7 +1,37 @@
 import type { NextConfig } from "next";
 
+// For deployment compatibility - set sensible defaults when env vars are missing
 const nextConfig: NextConfig = {
-  /* config options here */
+  reactStrictMode: true,
+  // swcMinify is deprecated in newer Next.js versions
+  // swcMinify: true,
+  images: {
+    domains: ['fonts.gstatic.com'],
+  },
+  webpack: (config) => {
+    // This is to handle PDFRenderer and @react-pdf packages
+    config.resolve.alias.canvas = false;
+    config.resolve.alias.encoding = false;
+    
+    return config;
+  },
+  // Define environment variables with defaults to prevent build failures
+  env: {
+    OPENAI_API_KEY: process.env.OPENAI_API_KEY || 'dummy-key-for-build',
+  },
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'Content-Security-Policy',
+            value: "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob:;",
+          },
+        ],
+      },
+    ];
+  },
 };
 
 export default nextConfig;
