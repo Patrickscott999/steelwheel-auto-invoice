@@ -2,29 +2,30 @@ import React from 'react';
 import { Page, Text, View, Document, StyleSheet, Font, pdf } from '@react-pdf/renderer';
 import { Invoice, Customer, Vehicle } from '@/types';
 
-// Skip external font registration for now to prevent loading errors
-// Using fallback system fonts instead
+// Use standard fonts that are more compatible with PDF viewers like Preview
 Font.register({
-  family: 'Orbitron',
+  family: 'Helvetica',
   fonts: [
-    { src: '/fonts/fallback.ttf' }, // This won't actually load but prevents errors
-  ],
+    { src: 'Helvetica' },
+    { src: 'Helvetica-Bold', fontWeight: 'bold' },
+  ]
 });
 
 Font.register({
-  family: 'Poppins',
+  family: 'Times-Roman',
   fonts: [
-    { src: '/fonts/fallback.ttf' }, // This won't actually load but prevents errors
-  ],
+    { src: 'Times-Roman' },
+    { src: 'Times-Bold', fontWeight: 'bold' },
+  ]
 });
 
-// Create styles
+// Create styles with standard fonts for better compatibility
 const styles = StyleSheet.create({
   page: {
     flexDirection: 'column',
     backgroundColor: '#FFFFFF',
     padding: 30,
-    fontFamily: 'Poppins',
+    fontFamily: 'Helvetica',
   },
   header: {
     marginBottom: 20,
@@ -35,7 +36,8 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 24,
-    fontFamily: 'Orbitron',
+    fontFamily: 'Helvetica',
+    fontWeight: 'bold',
     color: 'white',
     textAlign: 'center',
     marginBottom: 10,
@@ -223,10 +225,13 @@ const InvoicePDF = ({ invoice, customer }: InvoicePDFProps) => (
 );
 
 export async function generatePDF(invoice: Invoice, customer: Customer) {
-  // Optional: We can include AI-generated content here by
-  // calling our OpenAI helper function
-  // For now, we'll just generate the basic PDF
-  return await pdf(<InvoicePDF invoice={invoice} customer={customer} />).toBuffer();
+  // Create a renderer with specific PDF version for better compatibility
+  const pdfDocument = await pdf(
+    <InvoicePDF invoice={invoice} customer={customer} />
+  ).toBuffer();
+  
+  // Return the PDF buffer
+  return pdfDocument;
 }
 
 export default InvoicePDF;
